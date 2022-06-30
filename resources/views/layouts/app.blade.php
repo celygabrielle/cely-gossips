@@ -16,24 +16,46 @@
 <body>
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <div class="container">
-            <a class="navbar-brand" href="#">Cely Gossips</a>
+            <a class="navbar-brand" href="{{ route('home') }}">Cely Gossips</a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
                 aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
+
+            <div class="collapse navbar-collapse justify-content-between" id="navbarNav">
                 <ul class="navbar-nav">
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Home</a>
+                        <a class="nav-link" href="{{ route('noticia.index') }}">Notícias</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Notícias</a>
-                    </li>
+                    @auth
+                        @if (auth()->user()->is_admin !== 0)
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ route('admin') }}">Administrativo</a>
+                            </li>
+                        @endif
+                    @endauth
                 </ul>
+                @auth
+                    <a onclick="event.preventDefault(); document.getElementById('logout-form').submit();"
+                        class="text-primary">
+                        Sair
+                    </a>
+                    <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                        @csrf
+                    </form>
+                @else
+                    <a href="{{ route('login') }}" class="text-primary">Faça Login</a>
+                @endauth
             </div>
         </div>
     </nav>
+
     <div class="container py-4">
+        @if (session('Error'))
+            <div class="alert alert-warning my-2" role="alert">
+                <strong>{{ session('Error') }}</strong>
+            </div>
+        @endif
         @yield('body')
     </div>
 

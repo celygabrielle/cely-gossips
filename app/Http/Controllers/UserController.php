@@ -17,6 +17,9 @@ class UserController extends Controller
 
     public function index(Request $request)
     {
+        if (auth()->user()->is_admin !== 1) {
+            return redirect()->route('home')->with(['Error' => 'Não autorizado']);
+        }
         $users = $this->users->all();
         return view('user.index', ['users' => $users]);
     }
@@ -27,18 +30,10 @@ class UserController extends Controller
         if (!$user) {
             return redirect()->route('user.index')->with(['Error' => 'Não foi possivel encontrar o usuário']);
         }
+        if (auth()->id() !== $user->id && auth()->user()->is_admin !== 1) {
+            return redirect()->route('home')->with(['Error' => 'Não autorizado']);
+        }
         return view('user.show', compact('user'));
-    }
-
-    public function create()
-    {
-        return view('user.create');
-    }
-
-    public function store(Request $request)
-    {
-        $user = $this->users->create($request->validated());
-        return redirect()->route('user.show', ['user' => $user]);
     }
 
     public function edit($id)
@@ -46,6 +41,9 @@ class UserController extends Controller
         $user = $this->users->find($id);
         if (!$user) {
             return redirect()->route('user.index')->with(['Error' => 'Não foi possivel encontrar o usuário']);
+        }
+        if (auth()->id() !== $user->id) {
+            return redirect()->route('home')->with(['Error' => 'Não autorizado']);
         }
         return view('user.edit', ['user' => $user]);
     }
@@ -56,8 +54,48 @@ class UserController extends Controller
         if (!$user) {
             return redirect()->route('user.index')->with(['Error' => 'Não foi possivel encontrar o usuário']);
         }
-        $this->repository->update($request->validated(), $user->id);
-        return redirect()->back()->with(['success' => "Alterado com sucesso"]);
+        if (auth()->id() !== $user->id) {
+            return redirect()->route('home')->with(['Error' => 'Não autorizado']);
+        }
+        $user->update($request->all());
+        return redirect()->route('user.show', ['id' => $user->id]);
+    }
+
+    public function editRole($id)
+    {
+        if (auth()->user()->is_admin !== 1) {
+            return redirect()->route('home')->with(['Error' => 'Não autorizado']);
+        }
+        $user = $this->users->find($id);
+        if (!$user) {
+            return redirect()->route('user.index')->with(['Error' => 'Não foi possivel encontrar o usuário']);
+        }
+
+        if ($user->is_admin === 1) {
+            return redirect()->route('user.index')->with(['Error' => 'Não foi possivel alterar a função do usuário']);
+        }
+        return view('user.editRole', ['user' => $user]);
+    }
+
+    public function updateRole($id, Request $request)
+    {
+        if (auth()->user()->is_admin !== 1) {
+            return redirect()->route('home')->with(['Error' => 'Não autorizado']);
+        }
+
+        $user = $this->users->find($id);
+
+        if (!$user) {
+            return redirect()->route('user.index')->with(['Error' => 'Não foi possivel encontrar o usuário']);
+        }
+
+        if ($user->is_admin === 1) {
+            return redirect()->route('user.index')->with(['Error' => 'Não foi possivel alterar a função do usuário']);
+        }
+
+        $user->update(['is_admin' => $request->has('admin')]);
+    
+        return redirect()->route('user.show', ['id' => $user->id]);
     }
 
     public function delete($id, Request $request)
@@ -66,12 +104,14 @@ class UserController extends Controller
         if (!$user) {
             return redirect()->route('user.index')->with(['Error' => 'Não foi possivel encontrar o usuário']);
         }
-
+        if (auth()->id() !== $user->id && auth()->user()->is_admin !== 1) {
+            return redirect()->route('home')->with(['Error' => 'Não autorizado']);
+        }
         $user->delete();
-
         if (auth()->id() === $id) {
             auth()->logout();
+            return redirect()->route('home');
         }
-        return redirect()->route('home');
+        return redirect()->route('user.index');
     }
 }

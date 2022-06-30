@@ -1,9 +1,7 @@
 @extends('layouts.app')
 
 @section('body')
-
-    
-<div class="card">
+    <div class="card">
         <div class="card-body p-0">
             <div class="table-responsive">
                 <table class="table border text-nowrap text-md-nowrap table-bordered table-hover mb-0">
@@ -17,8 +15,8 @@
                             <tr>
                                 <td>{{ $user->name }} </td>
                                 <td>{{ $user->email }} </td>
-                                <td> 
-                                <a href="{{ route('user.show', ['id' => $user->id]) }}"
+                                <td>
+                                    <a href="{{ route('user.show', ['id' => $user->id]) }}"
                                         class="btn btn-sm btn-primary">Ver</a>
                                 </td>
                             </tr>
@@ -28,5 +26,4 @@
             </div>
         </div>
     </div>
-    
 @endsection

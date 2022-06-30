@@ -1,9 +1,7 @@
 @extends('layouts.app')
 
 @section('body')
-    <h3>
-        Bem vindo @auth {{ auth()->user()->name }} @endauth ao Cely Gossips
-    </h3>
+
     @foreach ($noticias as $noticia)
         <div class="card mt-2">
             <div class="card-header">
@@ -20,9 +18,7 @@
 
     @if (count($noticias) <= 0)
         <p>
-            Nenhuma notícia cadastrada
+            Nenhuma Notícia cadastrada
         </p>
-    @else
-        <a href="{{ route('noticia.index') }}">Ver todas as Notícias</a>
     @endif
 @endsection
