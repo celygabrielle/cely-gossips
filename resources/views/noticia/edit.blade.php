@@ -13,15 +13,16 @@
                 @csrf
                 <div class="form-group">
                     <label for="">Titulo</label>
-                    <input type="text" name="titulo" value="{{ $noticia->titulo }}" class="form-control">
+                    <input type="text" name="titulo" value="{{ $noticia->titulo }}" class="form-control" required>
                 </div>
                 <div class="form-group">
                     <label for="">SubTitulo</label>
-                    <input type="text" name="subtitulo" value="{{ $noticia->subtitulo }}" class="form-control">
+                    <input type="text" name="subtitulo" value="{{ $noticia->subtitulo }}" class="form-control"
+                        required>
                 </div>
                 <div class="form-group">
                     <label for="">Corpo</label>
-                    <textarea name="corpo" class="form-control" cols="5" rows="5">{{ $noticia->corpo }}</textarea>
+                    <textarea name="corpo" class="form-control" cols="5" rows="5" required>{{ $noticia->corpo }}</textarea>
                 </div>
                 <button type="submit" class="btn btn-success">
                     Salvar Alterações

@@ -35,17 +35,21 @@
                         @endif
                     @endauth
                 </ul>
-                @auth
-                    <a onclick="event.preventDefault(); document.getElementById('logout-form').submit();"
-                        class="text-primary">
-                        Sair
-                    </a>
-                    <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-                        @csrf
-                    </form>
-                @else
-                    <a href="{{ route('login') }}" class="text-primary">Faça Login</a>
-                @endauth
+                <div>
+                    @auth
+                        <a href="{{ route('user.show', ['id' => auth()->id()]) }}" class="text-primary">Ver Conta</a>
+                        <a onclick="event.preventDefault(); document.getElementById('logout-form').submit();"
+                            class="ml-2 text-primary">
+                            Sair
+                        </a>
+                        <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                            @csrf
+                        </form>
+                    @else
+                        <a href="{{ route('login') }}" class="text-primary">Faça Login</a>
+                    @endauth
+                </div>
+
             </div>
         </div>
     </nav>

@@ -94,7 +94,7 @@ class UserController extends Controller
         }
 
         $user->update(['is_admin' => $request->has('admin')]);
-    
+
         return redirect()->route('user.show', ['id' => $user->id]);
     }
 
@@ -108,10 +108,6 @@ class UserController extends Controller
             return redirect()->route('home')->with(['Error' => 'Não autorizado']);
         }
         $user->delete();
-        if (auth()->id() === $id) {
-            auth()->logout();
-            return redirect()->route('home');
-        }
-        return redirect()->route('user.index');
+        return redirect()->route('home');
     }
 }

@@ -13,7 +13,7 @@
                 @csrf
                 <div class="form-group">
                     <label for="">Nome</label>
-                    <input type="text" name="name" value="{{ $user->name }}" class="form-control">
+                    <input type="text" name="name" value="{{ $user->name }}" class="form-control" required>
                 </div>
                 <button type="submit" class="btn btn-success">
                     Salvar Alterações
