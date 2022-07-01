@@ -2,7 +2,7 @@
 
 > Status: Developed
 
-Aplicativo para disponibilização de notícias
+Aplicativo para disponibilização de notícias para a 3º nota da disciplina de Programação Orientada à Objetos do curso de Engenharia de Computaçao - UEMA 
 
 ## Instalação
 
