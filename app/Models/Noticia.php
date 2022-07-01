@@ -15,7 +15,8 @@ class Noticia extends Model
         'titulo',
         'subtitulo',
         'corpo',
-        'img_path',
+        'imagem_nome',
+        'imagem_extensao',
         'id_user',
     ];
 

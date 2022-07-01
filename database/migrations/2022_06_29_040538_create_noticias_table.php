@@ -17,6 +17,8 @@ class CreateNoticiasTable extends Migration
             $table->id();
             $table->string('titulo');
             $table->string('subtitulo');
+            $table->string('imagem_nome')->nullable()->default(null);
+            $table->string('imagem_extensao')->nullable()->default(null);
             $table->text('corpo');
             $table->unsignedBigInteger('id_user');
             $table->foreign('id_user')->references('id')->on("users")->onDelete("Cascade");

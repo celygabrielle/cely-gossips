@@ -34,7 +34,31 @@ class NoticiaController extends Controller
         if (auth()->user()->is_admin !== 1) {
             return redirect()->route('noticia.index')->with(['Error' => 'Não autorizado']);
         }
-        $noticia = $this->noticias->create($request->all() + ['id_user' => auth()->id()]);
+
+        $validated = $request->validate([
+            'titulo' => ['required', 'string'],
+            'subtitulo' => ['required', 'string'],
+            'corpo' => ['required', 'string'],
+            'imagem' => ['nullable', 'file', 'image', 'mimes:jpg,jpeg,png,gif,svg'],
+        ]);
+
+        $extensao = null;
+        $imagem = [];
+        if ($request->hasfile('imagem')) {
+            $nome_extensao = $request->imagem->getClientOriginalName();
+            $extensao = pathinfo($nome_extensao, PATHINFO_EXTENSION);
+            $imagem = [
+                'imagem_nome' => pathinfo($nome_extensao, PATHINFO_FILENAME),
+                'imagem_extensao' => $extensao,
+            ];
+        }
+
+        $noticia = $this->noticias->create($validated + ['id_user' => auth()->id()] + $imagem);
+
+        if ($request->hasfile('imagem')) {
+            $request->imagem->storeAs('imagens/', $noticia->id . '.' . $extensao);
+        }
+
         return redirect()->route('noticia.show', ['id' => $noticia]);
     }
 
@@ -65,10 +89,32 @@ class NoticiaController extends Controller
         if (!$noticia) {
             return redirect()->route('noticia.index')->with(['Error' => 'Não foi possivel encontrar a notícia']);
         }
+
         if (auth()->id() !== $noticia->id_user) {
             return redirect()->route('noticia.index')->with(['Error' => 'Não autorizado']);
         }
-        $noticia->update($request->all());
+
+        $validated = $request->validate([
+            'titulo' => ['required', 'string'],
+            'subtitulo' => ['required', 'string'],
+            'corpo' => ['required', 'string'],
+            'imagem' => ['nullable', 'file', 'image', 'mimes:jpg,jpeg,png,gif,svg'],
+        ]);
+
+        $extensao = null;
+        $imagem = [];
+        if ($request->hasfile('imagem')) {
+            $nome_extensao = $request->imagem->getClientOriginalName();
+            $extensao = pathinfo($nome_extensao, PATHINFO_EXTENSION);
+            $imagem = [
+                'imagem_nome' => pathinfo($nome_extensao, PATHINFO_FILENAME),
+                'imagem_extensao' => $extensao,
+            ];
+            $request->imagem->storeAs('imagens/', $noticia->id . '.' . $extensao);
+        }
+
+        $noticia->update($validated + $imagem);
+
         return redirect()->route('noticia.show', ['id' => $noticia->id]);
     }
 
